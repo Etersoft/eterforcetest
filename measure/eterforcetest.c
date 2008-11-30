@@ -1,6 +1,11 @@
 #include <windows.h>
 #include "eterforcetest.h"
 
+/*
+  Measure function work time
+  http://bugs.etersoft.ru/show_bug.cgi?id=3031
+*/
+
 FILE *measure_f;
 void measure_init()
 {
@@ -23,7 +28,7 @@ void measure_report()
 	printf ("\nNormalize result:\n");
 	for (i = 0 ; et_measure[i].name ; i++) {
 		if (et_measure[i].ms)
-			printf("    %15s %2.02f\n", et_measure[i].name, (((double)et_measure[i].res / et_measure[i].ms)/s));
+			printf("    %25s %2.02f\n", et_measure[i].name, (((double)et_measure[i].res / et_measure[i].ms)/s));
 	}
 	fclose(measure_f);
 }
@@ -32,8 +37,10 @@ int main()
 {
 	measure_init();
 	//test_string();
+	//test_encoding();
 	test_file();
-	test_time();
+	//test_time();
+	test_memory();
 	//test_window();
 	//test_font();
 	measure_report();

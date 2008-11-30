@@ -14,6 +14,7 @@ static DWORD measure_iresult[REPEAT_MEASURE];
 static DWORD measure_result;
 static DWORD time_start;
 static DWORD time_end;
+static int measure_divid;
 
 extern FILE *measure_f;
 void measure_init();
@@ -48,12 +49,13 @@ static inline void print_measure()
 	}
 	if (!etres)
 		etres = measure_result;
-	printf("%5d ms (%2.02f)\n\n", measure_result, ((double)measure_result)/etres);
+	printf("%5d ms (%2.02f) * %d (%.2fm iterations)\n\n", measure_result, ((double)measure_result)/etres, measure_divid, 0.000001*(MEASURE_COUNT*REPEAT_MEASURE)/measure_divid);
 	fprintf( measure_f, "%20s %10d\n", measure_name, measure_result);
 }
 
 #define MSTART(ok, name, divid) \
 	{ printf("Test for %15s ", name); \
+	measure_divid = (divid); \
 	strcpy(measure_name, name); \
 	if (!(ok)) { \
 		printf("skipping\n"); \
@@ -77,3 +79,6 @@ void test_file();
 void test_window();
 void test_font();
 void test_time();
+void test_memory();
+void test_encoding();
+
