@@ -32,9 +32,6 @@ void measure_init()
 {
 	measure_f = fopen("eterforcetest.log","w+");
 
-	printf("\nPerformance measurement instrument. (c) Etersoft 2008\n");
-	printf("See description at http://winehq.org.ru/Measurement\n");
-	printf("\n\n");
 }
 
 void measure_report()
@@ -52,7 +49,7 @@ void measure_report()
 	printf ("Average: %2.02f\n", s);
 	printf ("\nNormalize result:\n");
 	for (i = 0 ; et_measure[i].name ; i++) {
-		if (et_measure[i].ms)
+		if (et_measure[i].res)
 			printf("    %25s %2.02f\n",
 				et_measure[i].name, (((double)et_measure[i].res / et_measure[i].ms)/s));
 	}
@@ -64,7 +61,11 @@ int main(int argc, char**argv)
 	char *test = NULL;
 	/* We need static var against unused result optimization */
 	static int i = 2;
-	measure_init();
+	int list = 0;
+
+	printf("\nPerformance measurement instrument. (c) Etersoft 2008\n");
+	printf("See description at http://winehq.org.ru/Measurement\n");
+	printf("\n\n");
 
 	if (argc > 1) {
 		test = argv[1];
@@ -72,19 +73,29 @@ int main(int argc, char**argv)
 			printf("\nUsage: %s [testname]\n", argv[0]);
 			exit (0);
 		}
-		printf("Run '%s' test only\n", test);
+		if (!strcmp(test,"-l") || !strcmp(test,"--list")) {
+			list = 1;
+		} else
+			printf("Run '%s' test only\n", test);
 	}
 
+	if (!list) {
+		measure_init();
+		MSTART(!list, "Arithmetic", 1) {
+			i = (i+3)*7;
+			i = i / 4;
+			i = i - 7;
+			i = i^int_count;
+			i = i << 1;
+		} MEND
+	}
 
-	MSTART(0+1, "Arithmetic", 1) {
-		i = (i+3)*7;
-		i = i / 4;
-		i = i - 7;
-		i = i^int_count;
-		i = i << 1;
-	} MEND
+	#define TEST(n) \
+		if (!list && (!test || !stricmp(test, ""#n))) test_##n(); \
+		if (list) printf("\t%s\n",""#n);
 
-	#define TEST(n) if (!test || !stricmp(test, ""#n)) test_##n();
+	if (list)
+		printf("Allowed testnames:\n");
 	TEST(compare);
 	TEST(encoding);
 	TEST(string);
@@ -95,6 +106,7 @@ int main(int argc, char**argv)
 	TEST(window);
 	TEST(font);
 
-	measure_report();
+	if (!list)
+		measure_report();
 	return 0;
 }
