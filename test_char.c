@@ -1,21 +1,29 @@
+/*
+ * ETERFORCETEST
+ *
+ * Copyright 2008 Vitaly Lipatov, Etersoft
+ * Copyright 2008 Denis Baranov, Etersoft
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ */
+
 #include <windows.h>
 #include "eterforcetest.h"
 
 #define WINE_UNICODE_INLINE inline
-/* copied from wine/unicode.h, LGPL license
-*/
-WINE_UNICODE_INLINE WCHAR *strchrW( const WCHAR *str, WCHAR ch )
-{
-    do { if (*str == ch) return (WCHAR *)(ULONG_PTR)str; } while (*str++);
-    return NULL;
-}
-
-WINE_UNICODE_INLINE WCHAR *strrchrW( const WCHAR *str, WCHAR ch )
-{
-    WCHAR *ret = NULL;
-    do { if (*str == ch) ret = (WCHAR *)(ULONG_PTR)str; } while (*str++);
-    return ret;
-}
+#include "unicode.h"
 
 
 /* TODO: с кириллицей CP1251 */
