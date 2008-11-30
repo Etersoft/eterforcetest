@@ -58,8 +58,9 @@ static inline void measure_end() {
 static inline void print_measure()
 {
 	int i, etres = 0;
-	double ns;
-	/* Calc the average result */
+	double mks;
+
+	/* Calc the average result to measure_result */
 	measure_result = 0;
 	for (i = 0 ; i < REPEAT_MEASURE ; i++)
 		measure_result += measure_iresult[i];
@@ -75,12 +76,14 @@ static inline void print_measure()
 	if (!etres)
 		etres = measure_result;
 
-	ns = (1000.0*measure_result*measure_divid)/(MEASURE_COUNT);
-	printf("%8.3fns pc (%4u ms) (%2.02f) * %d (%.2fm iterations)\n\n",
-		ns,
-		measure_result,
-		((double)measure_result)/etres, measure_divid, 0.000001*(MEASURE_COUNT*REPEAT_MEASURE)/measure_divid);
-	fprintf( measure_f, "%30s %10d %8.3f\n", measure_name, measure_result, ns);
+	/* Get real time per one function call */
+	mks = (1000.0*measure_result*measure_divid)/(MEASURE_COUNT);
+
+	printf("%8.3fmks pc (%5u ms) (%3d%%) (1/%d - %.2fm iterations)\n\n",
+		mks,
+		measure_result * REPEAT_MEASURE,
+		(100*measure_result)/etres, measure_divid, 0.000001*(MEASURE_COUNT*REPEAT_MEASURE)/measure_divid);
+	fprintf( measure_f, "%30s %10d %8.3f\n", measure_name, measure_result, mks);
 }
 
 #define MSTART(ok, name, divid) \
@@ -100,6 +103,7 @@ static inline void print_measure()
 
 #define MEND \
 		measure_end(); \
+		Sleep(50); \
 	} \
 	if (time_start) \
 		print_measure(); }
