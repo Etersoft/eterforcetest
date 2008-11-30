@@ -11,7 +11,7 @@ void measure_init()
 {
 	measure_f = fopen("eterforcetest.log","w+");
 	printf("\nPerformance measurement instrument. (c) Etersoft 2008\n");
-	printf("See description at http://wiki.etersoft.ru/WINE/measure\n");
+	printf("See description at http://winehq.org.ru/Measurement\n");
 	printf("\n\n");
 }
 
