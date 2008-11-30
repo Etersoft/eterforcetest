@@ -20,11 +20,15 @@ WINE_UNICODE_INLINE WCHAR *strrchrW( const WCHAR *str, WCHAR ch )
 
 /* TODO: с кириллицей CP1251 */
 static CHAR test1_string[] = "ABCDEFGHRTPENDOFPROZMIY";
+static CHAR test2_string[] = "abcdefghrtpendofprozmiy";
 /*  "ABCDEFGHRTPENDOFPROZMIY"; */
 #define TEST_STRING test1_string
+#define test_STRING test2_string
 
-static WCHAR test_stringW[] = {'A','B','C','D','E','F','G','H','R','T','P','E','N','D','O','F','P','R','O','Z','M','I','Y', '\0'};
-#define TEST_STRINGW test_stringW
+static WCHAR test1_stringW[] = {'A','B','C','D','E','F','G','H','R','T','P','E','N','D','O','F','P','R','O','Z','M','I','Y', '\0'};
+#define TEST_STRINGW test1_stringW
+static WCHAR test2_stringW[] = {'a','b','c','d','e','f','g','h','r','t','p','e','n','d','o','f','p','r','o','z','m','i','y', '\0'};
+#define test_STRINGW test2_stringW
 
 void test_char()
 {
@@ -32,7 +36,8 @@ void test_char()
 	static CHAR *str;
 	static WCHAR *strW;
 	int ok = strchr(TEST_STRING, 'Z') != NULL;
-
+	static BOOL flag;
+	
 	printf("\n\n* * *  Char operations  * * *\n");
 
 
@@ -44,7 +49,31 @@ void test_char()
 	MSTART(1, "strchrW", 2) {
 		strW = strchrW(TEST_STRINGW, 'z');
 	} MEND
-
+	
+	MSTART(1, "IscharAlphaNumericA",1) {
+		flag = IsCharAlphaNumericA('Z');
+	} MEND
+	
+	MSTART(1, "IscharAlphaNumericW",1) {
+		flag = IsCharAlphaNumericW('Z');
+	} MEND
+	
+	MSTART(1, "IscharAlphaA",1) {
+		flag = IsCharAlphaA('Z');
+	} MEND
+	
+	MSTART(1, "IscharAlphaW",1) {
+		flag = IsCharAlphaW('Z');
+	} MEND
+	
+	MSTART(1, "CharUpperA",1) {
+		str = CharUpperA(test_STRING);
+	} MEND
+	
+	MSTART(1, "CharUpperW",1) {
+		strW = CharUpperW(test_STRINGW);
+	} MEND
+	
 	/* TODO
 	IsCharAlphaNumericA
 	CharUpperA
