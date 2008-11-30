@@ -8,7 +8,7 @@
 #define REPEAT_MEASURE 5
 
 static int measure_count;
-static char measure_name[20];
+static char measure_name[100];
 static DWORD measure_iresult[REPEAT_MEASURE];
 static int measure_result;
 static DWORD time_start;
@@ -38,6 +38,7 @@ static inline void measure_end() {
 static inline void print_measure()
 {
 	int i, etres = 0;
+	double ns;
 	/* Calc the average result */
 	measure_result = 0;
 	for (i = 0 ; i < REPEAT_MEASURE ; i++)
@@ -54,17 +55,18 @@ static inline void print_measure()
 	if (!etres)
 		etres = measure_result;
 
-	printf("%5u ms (%.3fns pc) (%2.02f) * %d (%.2fm iterations)\n\n",
+	ns = (1000.0*measure_result*measure_divid)/(MEASURE_COUNT);
+	printf("%8.3fns pc (%4u ms) (%2.02f) * %d (%.2fm iterations)\n\n",
+		ns,
 		measure_result,
-		(1000.0*measure_result*measure_divid)/(MEASURE_COUNT),
 		((double)measure_result)/etres, measure_divid, 0.000001*(MEASURE_COUNT*REPEAT_MEASURE)/measure_divid);
-	fprintf( measure_f, "%20s %10d\n", measure_name, measure_result);
+	fprintf( measure_f, "%30s %10d %8.3f\n", measure_name, measure_result, ns);
 }
 
 #define MSTART(ok, name, divid) \
 	{ \
 	register int int_count; \
-	printf("Test for %15s ", name); \
+	printf("Test for %25s ", name); \
 	measure_divid = (divid); \
 	strcpy(measure_name, name); \
 	if (!(ok)) { \

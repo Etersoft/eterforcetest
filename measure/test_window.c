@@ -1,5 +1,10 @@
+#include <windows.h>
+#include "eterforcetest.h"
 
+void test_window()
+{
 /* In the priority order */
+/*
 GetParent
 GetWindow
 CallWindowProcA
@@ -32,3 +37,5 @@ DeleteObject
 AppendMenuA
 SetTextColor
 SetBkColor
+*/
+}

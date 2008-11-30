@@ -10,6 +10,7 @@ FILE *measure_f;
 void measure_init()
 {
 	measure_f = fopen("eterforcetest.log","w+");
+
 	printf("\nPerformance measurement instrument. (c) Etersoft 2008\n");
 	printf("See description at http://winehq.org.ru/Measurement\n");
 	printf("\n\n");
@@ -37,11 +38,22 @@ void measure_report()
 	fclose(measure_f);
 }
 
-int main()
+int main(int argc, char**argv)
 {
+	char *test = NULL;
 	/* We need static var against unused result optimization */
 	static int i = 2;
 	measure_init();
+
+	if (argc > 1) {
+		test = argv[1];
+		if (!strcmp(test,"-h") || !strcmp(test,"--help")) {
+			printf("\nUsage: %s [testname]\n", argv[0]);
+			exit (0);
+		}
+		printf("Run '%s' test only\n", test);
+	}
+
 
 	MSTART(0+1, "Arithmetic", 1) {
 		i = (i+3)*7;
@@ -51,15 +63,17 @@ int main()
 		i = i << 1;
 	} MEND
 
-	test_compare();
-	test_encoding();
-	test_string();
-	test_char();
-	test_file();
-	//test_time();
-	test_memory();
-	//test_window();
-	//test_font();
+	#define TEST(n) if (!test || !stricmp(test, ""#n)) test_##n();
+	TEST(compare);
+	TEST(encoding);
+	TEST(string);
+	TEST(char);
+	TEST(file);
+	TEST(time);
+	TEST(memory);
+	TEST(window);
+	TEST(font);
+
 	measure_report();
 	return 0;
 }
