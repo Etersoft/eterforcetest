@@ -1,0 +1,8 @@
+И GetTickCount и QueryPerformanceCounter реализованы через gettimeofday
+Нужен режим с тестированием аналогичных Linux-функций
+
+Компиляция с оптимизацией -O3
+Компиляция с оптимизацией под процессор
+Компиляция WINE без отладки (TRACE)
+Что с inline http://gcc.gnu.org/onlinedocs/gcc/Inline.html
+Не забывать про использование результата (static)
