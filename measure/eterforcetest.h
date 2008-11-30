@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-const int MEASURE_COUNT = 7000000;
+#define MEASURE_COUNT 7000000
 
 #define REPEAT_MEASURE 5
 
@@ -20,7 +20,7 @@ void measure_init();
 
 extern struct { char *name; int ms; int res;} et_measure[];
 
-inline void measure_start() {
+static inline void measure_start() {
 	putchar('.'); fflush(stdout); 
 	time_start = GetTickCount();
 	/* Align to interval start */
@@ -28,12 +28,12 @@ inline void measure_start() {
 	time_start++;
 }
 
-inline void measure_end() {
+static inline void measure_end() {
 	time_end = GetTickCount();
 	measure_iresult[measure_count] = time_end - time_start;
 }
 
-inline void print_measure()
+static inline void print_measure()
 {
 	int i, etres = 0;
 	measure_result = 0;
@@ -70,3 +70,10 @@ inline void print_measure()
 	if (time_start) \
 		print_measure(); }
 
+
+
+void test_string();
+void test_file();
+void test_window();
+void test_font();
+void test_time();

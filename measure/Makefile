@@ -9,7 +9,7 @@ PROGRAM=eterforcetest
 .c.o:
 	$(GCC) -c -o $@ $<
 
-$(PROGRAM).exe: eterforcetest.o etalon_measure.o
+$(PROGRAM).exe: eterforcetest.o etalon_measure.o test_string.o test_file.o test_time.o
 	$(GCC) $^ -o $@ -lgdi32
 
 clean:
