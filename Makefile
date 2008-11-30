@@ -1,3 +1,4 @@
+PUBDIR=/var/ftp/pub/Etersoft/Eterforcetest
 CPP=i386-mingw32msvc-g++
 GCC=i386-mingw32msvc-gcc
 
@@ -20,3 +21,9 @@ $(PROGRAM).exe: $(OBJECTS)
 
 clean:
 	rm -f *.o $(PROGRAM).exe
+
+strip:
+	i386-mingw32msvc-strip $(PROGRAM).exe
+
+publish: strip
+	cp -f $(PROGRAM).exe $(PUBDIR)/
