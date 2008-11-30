@@ -1,0 +1,4 @@
+This project intendent to use all performance critical WinAPI functions
+for measure their cpu using and research with valgrind.
+
+Etersoft, 2008
