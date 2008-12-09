@@ -2,7 +2,7 @@ PUBDIR=/var/ftp/pub/Etersoft/Eterforcetest
 CPP=i386-mingw32msvc-g++
 GCC=i386-mingw32msvc-gcc
 
-CFLAGS=-Wall -O2 -g -Werror
+CFLAGS=-Wall -O0 -g -Werror
 LDFLAGS=
 LIBADD=-lgdi32
 
