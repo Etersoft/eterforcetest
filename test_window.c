@@ -25,6 +25,9 @@ void test_window()
 {
 /* In the priority order */
 /*
+
+TODO: window, menu, memdc, x11dc
+
 GetParent
 GetWindow
 CallWindowProcA

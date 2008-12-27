@@ -6,3 +6,9 @@
 Компиляция WINE без отладки (TRACE)
 Что с inline http://gcc.gnu.org/onlinedocs/gcc/Inline.html
 Не забывать про использование результата (static)
+
+Нужно тестирование скорости работы функций меню
+
+See dlls/pdh.dll
+
+see cycle.h
