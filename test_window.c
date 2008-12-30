@@ -64,6 +64,7 @@ void test_window()
 {
     HWND hwnd, child, child2;
     WNDPROC wndproc;
+    RECT rc;
     DWORD ok;
 
     printf("\n\n* * *  Window operations  * * *\n");
@@ -142,6 +143,16 @@ void test_window()
         IsWindow( hwnd );
     } MEND
 
-    DestroyWindow( child );
-    DestroyWindow( hwnd );
+    ok = GetClientRect( hwnd, &rc );
+    MSTART(ok, "GetClientRect", 6) {
+        GetClientRect( hwnd, &rc );
+    } MEND
+
+    ok = GetWindowRect( hwnd, &rc );
+    MSTART(ok, "GetWindowRect", 6) {
+        GetWindowRect( hwnd, &rc );
+    } MEND
+
+    DestroyWindow(child);
+    DestroyWindow(hwnd);
 }
