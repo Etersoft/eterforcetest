@@ -105,6 +105,7 @@ int main(int argc, char**argv)
 	TEST(memory);
 	TEST(window);
     TEST(menu);
+    TEST(message);
 	TEST(font);
 
 	if (!list)
