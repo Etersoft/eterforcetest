@@ -117,6 +117,7 @@ void test_file();
 void test_window();
 void test_menu();
 void test_message();
+void test_dialog();
 void test_font();
 void test_time();
 void test_memory();
