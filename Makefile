@@ -8,7 +8,7 @@ LIBADD=-lgdi32
 
 PROGRAM=eterforcetest
 
-OBJECTS=eterforcetest.o etalon_measure.o test_string.o test_file.o test_time.o test_memory.o test_char.o test_encoding.o test_compare.o test_window.o test_font.o test_menu.o test_message.o test_dialog.o test_x11dc.o
+OBJECTS=eterforcetest.o etalon_measure.o test_string.o test_file.o test_time.o test_memory.o test_char.o test_encoding.o test_compare.o test_window.o test_font.o test_menu.o test_message.o test_dialog.o test_x11dc.o test_memdc.o
 
 .cpp.o:
 	$(CPP) -c -o $@ $(CFLAGS) $<
