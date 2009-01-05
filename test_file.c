@@ -65,5 +65,6 @@ void test_file()
 	} MEND
 	CloseHandle(hFile);
 
+	DeleteFile(filename);
 }
 
