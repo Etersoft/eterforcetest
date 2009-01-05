@@ -153,6 +153,13 @@ void test_window()
         GetWindowRect( hwnd, &rc );
     } MEND
 
+    keybd_event( VK_SHIFT, 0x10, 0, 0 );
+    ok = GetKeyState(VK_SHIFT);
+    MSTART(ok, "GetKeyState", 6) {
+        GetKeyState(VK_SHIFT);
+    } MEND
+    keybd_event( VK_SHIFT, 0x10, KEYEVENTF_KEYUP, 0 );
+
     DestroyWindow(child);
     DestroyWindow(hwnd);
 }
