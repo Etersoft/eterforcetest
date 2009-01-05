@@ -22,7 +22,7 @@
 #include <windows.h>
 #include "eterforcetest.h"
 
-LRESULT CALLBACK msg_WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
  switch (message)
  {
@@ -41,12 +41,12 @@ LRESULT CALLBACK msg_WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
  return 0;
 }
 
-BOOL msg_RegisterWindowClasses(void)
+static BOOL RegisterWindowClasses(void)
 {
     WNDCLASSA cls;
 
     cls.style = CS_DBLCLKS;
-    cls.lpfnWndProc = msg_WndProc;
+    cls.lpfnWndProc = WndProc;
     cls.cbClsExtra = 0;
     cls.cbWndExtra = 0;
     cls.hInstance = GetModuleHandleA(0);
@@ -68,7 +68,7 @@ void test_message()
 
     printf("\n\n* * *  Message operations  * * *\n");
 
-    if (!msg_RegisterWindowClasses()) return;
+    if (!RegisterWindowClasses()) return;
 
     hwnd = CreateWindowEx( 0, "WinMsg", "Test window",
                             WS_OVERLAPPED | WS_CAPTION,

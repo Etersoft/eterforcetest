@@ -24,7 +24,7 @@
 
 #define MAX_STR 40
 
-BOOL menu_RegisterWindowClasses(void)
+static BOOL RegisterWindowClasses(void)
 {
     WNDCLASSA cls;
 
@@ -61,7 +61,7 @@ void test_menu()
 
     printf("\n\n* * *  Menu operations  * * *\n");
 
-    if (!menu_RegisterWindowClasses()) return;
+    if (!RegisterWindowClasses()) return;
 
     hwnd = CreateWindowEx( 0, "Win", "Test window",
                             WS_OVERLAPPED | WS_CAPTION,

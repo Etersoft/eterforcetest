@@ -54,7 +54,7 @@ static INT_PTR CALLBACK MSGBOX_DlgProc( HWND hWnd, UINT message, WPARAM wParam, 
  return 0;
 }
 
-BOOL dlg_RegisterWindowClasses(void)
+static BOOL RegisterWindowClasses(void)
 {
     WNDCLASSA cls;
 
@@ -74,7 +74,7 @@ BOOL dlg_RegisterWindowClasses(void)
     return TRUE;
 }
 
-LPWORD lpwAlign(LPWORD lpIn)
+static LPWORD lpwAlign(LPWORD lpIn)
 {
     ULONG ul;
 
@@ -97,7 +97,7 @@ void test_dialog()
 
     printf("\n\n* * *  Dialog operations  * * *\n");
 
-    if (!dlg_RegisterWindowClasses()) return;
+    if (!RegisterWindowClasses()) return;
 
     hwnd = CreateWindowEx( 0, "WinDlg", "Test window",
                             WS_OVERLAPPED | WS_CAPTION,

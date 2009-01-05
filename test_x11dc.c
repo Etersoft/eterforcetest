@@ -24,7 +24,7 @@
 
 #define COLOR_TEST 0xF0F0F0
 
-BOOL x11dc_RegisterWindowClasses(void)
+static BOOL RegisterWindowClasses(void)
 {
     WNDCLASSA cls;
 
@@ -57,7 +57,7 @@ void test_x11dc()
 
     printf("\n\n* * *  X11 DC operations  * * *\n");
 
-    if (!x11dc_RegisterWindowClasses()) return;
+    if (!RegisterWindowClasses()) return;
 
     hwnd = CreateWindowEx( 0, "WinX11dc", "Test window",
                             WS_OVERLAPPED | WS_CAPTION,

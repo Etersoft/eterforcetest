@@ -22,7 +22,7 @@
 #include <windows.h>
 #include "eterforcetest.h"
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
  switch (message)
  {
@@ -41,7 +41,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
  return 0;
 }
 
-BOOL RegisterWindowClasses(void)
+static BOOL RegisterWindowClasses(void)
 {
     WNDCLASSA cls;
 
