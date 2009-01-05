@@ -87,7 +87,7 @@ void test_char()
 
 	/* Test Char Upper/Lower */
 	lstrcpyA(dest, test_STRING);
-	MSTART(1, "CharUpperA",1) {
+	MSTART(1, "CharUpperA",5) {
 		str = CharUpperA(dest);
 	} MEND
 
@@ -97,7 +97,7 @@ void test_char()
 	} MEND
 
 	lstrcpyA(dest, TEST_STRING);
-	MSTART(1, "CharLowerA",1) {
+	MSTART(1, "CharLowerA",5) {
 		str = CharLowerA(dest);
 	} MEND
 
@@ -110,7 +110,7 @@ void test_char()
 	/* Test Char Upper/Lower with cyrillic string */
 	/* FIXME: test with lower string */
 	lstrcpyA(dest, test_stringCy);
-	MSTART(1, "CharUpperA/Cyr",1) {
+	MSTART(1, "CharUpperA/Cyr",5) {
 		str = CharUpperA(dest);
 	} MEND
 
@@ -120,7 +120,7 @@ void test_char()
 	} MEND
 
 	lstrcpyA(dest, test_stringCy);
-	MSTART(1, "CharLowerA/Cyr",1) {
+	MSTART(1, "CharLowerA/Cyr",5) {
 		str = CharLowerA(dest);
 	} MEND
 
