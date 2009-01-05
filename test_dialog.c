@@ -2,6 +2,7 @@
  * ETERFORCETEST
  *
  * Copyright 2008 Vitaly Lipatov, Etersoft
+ * Copyright 2008 Ilya Shpigor, Etersoft
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
