@@ -141,17 +141,15 @@ void test_time()
 	} MEND
 #endif
 
-	/* Guess two GetSystemTime is two system call gettimeofday */
+	/* Guess one GetSystemTime is one system call gettimeofday */
 	MSTART(1, "OS_Kernel_call", 40) {
-		GetSystemTime(&lt);
 		GetSystemTime(&lt);
 	} MEND
 
-	/* Guess open/close key is two wineserver call */
+	/* Guess close key is one wineserver call */
 	res = (ERROR_SUCCESS==RegOpenKeyEx(HKEY_LOCAL_MACHINE,"Software",0,KEY_WRITE,&key));
 	RegCloseKey(key);
 	MSTART(res, "wineserver_call", 400) {
-		RegOpenKeyEx(HKEY_LOCAL_MACHINE,"Software",0,KEY_WRITE,&key);
 		RegCloseKey(key);
 	} MEND
 
