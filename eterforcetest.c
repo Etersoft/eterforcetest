@@ -111,7 +111,8 @@ int main(int argc, char**argv)
 	TEST(x11dc);
 	TEST(memdc);
 	TEST(font);
-    TEST(ole32);
+	TEST(ole32);
+	TEST(reg);
 
 	if (!list)
 		measure_report();
