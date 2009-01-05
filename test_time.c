@@ -50,23 +50,35 @@ WINAPI DWORD func()
 	return GetTickCount();
 }
 
-WINAPI ticks empty_func()
+WINAPI ticks ticks_func()
 {
      unsigned a = 0x101, d = 0x202;
      return (((ticks)a) | (((ticks)d) << 32));
 }
 
+WINAPI ticks empty_func()
+{
+     unsigned a = 0x101;
+     return a;
+}
+
 void test_time()
 {
 	SYSTEMTIME st, lt;
+/*	FILETIME ft1 */
 	static DWORD tc;
 	static ULONGLONG utc;
 	WINBASEAPI ULONGLONG (WINAPI *pgtc)(void);
 	static DWORD (WINAPI *pfunc)(void);
 	static ticks (WINAPI *ptfunc)(void);
 	HANDLE hModule;
+	BOOL res;
+	HKEY key;
 
 	printf("\n\n* * *  Time operations  * * *\n");
+
+	MSTART(1, "empty_loop", 1) {
+	} MEND
 
 	MSTART(1, "GetTickCount", 10) {
 		tc = GetTickCount();
@@ -77,15 +89,6 @@ void test_time()
 		tc = func();
 	} MEND
 
-	ptfunc = &empty_func; /* forbid inline func */
-	MSTART(1, "empty_10func", 1) {
-		/* ten times */
-		utc = empty_func(); utc = empty_func();
-		utc = empty_func(); utc = empty_func();
-		utc = empty_func(); utc = empty_func();
-		utc = empty_func(); utc = empty_func();
-		utc = empty_func(); utc = empty_func();
-	} MEND
 
 	/* FIXME: detect if rdtsc using will correct */
 	MSTART(1, "getticks_via_rdtsc", 1) {
@@ -105,6 +108,51 @@ void test_time()
 	pgtc = (void*)GetProcAddress(hModule, "GetTickCount64");
 	MSTART(pgtc, "GetTickCount64", 10) {
 		utc = pgtc();
+	} MEND
+
+	ptfunc = &empty_func; /* forbid inline func */
+	MSTART(1, "empty_10func", 1) {
+		/* ten times */
+		utc = empty_func(); utc = empty_func();
+		utc = empty_func(); utc = empty_func();
+		utc = empty_func(); utc = empty_func();
+		utc = empty_func(); utc = empty_func();
+		utc = empty_func(); utc = empty_func();
+	} MEND
+
+	MSTART(1, "kernel32_10call", 1) {
+		/* ten times */
+		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
+		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
+		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
+		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
+		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
+	} MEND
+
+#if 0
+/* Do not measure correctly */
+	MSTART(1, "kernel32_via_ntdll_10call", 1) {
+		/* ten times */
+		res = DosDateTimeToFileTime( 0, 0, &ft1); res = DosDateTimeToFileTime( 0, 0, &ft1);
+		res = DosDateTimeToFileTime( 0, 0, &ft1); res = DosDateTimeToFileTime( 0, 0, &ft1);
+		res = DosDateTimeToFileTime( 0, 0, &ft1); res = DosDateTimeToFileTime( 0, 0, &ft1);
+		res = DosDateTimeToFileTime( 0, 0, &ft1); res = DosDateTimeToFileTime( 0, 0, &ft1);
+		res = DosDateTimeToFileTime( 0, 0, &ft1); res = DosDateTimeToFileTime( 0, 0, &ft1);
+	} MEND
+#endif
+
+	/* Guess two GetSystemTime is two system call gettimeofday */
+	MSTART(1, "OS_Kernel_call", 40) {
+		GetSystemTime(&lt);
+		GetSystemTime(&lt);
+	} MEND
+
+	/* Guess open/close key is two wineserver call */
+	res = (ERROR_SUCCESS==RegOpenKeyEx(HKEY_LOCAL_MACHINE,"Software",0,KEY_WRITE,&key));
+	RegCloseKey(key);
+	MSTART(res, "wineserver_call", 400) {
+		RegOpenKeyEx(HKEY_LOCAL_MACHINE,"Software",0,KEY_WRITE,&key);
+		RegCloseKey(key);
 	} MEND
 
 }
