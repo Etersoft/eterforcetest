@@ -91,6 +91,7 @@ int main(int argc, char**argv)
 	}
 
 	#define TEST(n) \
+		void test_##n(); \
 		if (!list && (!test || !stricmp(test, ""#n))) test_##n(); \
 		if (list) printf("\t%s\n",""#n);
 
@@ -104,11 +105,11 @@ int main(int argc, char**argv)
 	TEST(time);
 	TEST(memory);
 	TEST(window);
-    TEST(menu);
-    TEST(message);
-    TEST(dialog);
-    TEST(x11dc);
-    TEST(memdc);
+	TEST(menu);
+	TEST(message);
+	TEST(dialog);
+	TEST(x11dc);
+	TEST(memdc);
 	TEST(font);
     TEST(ole32);
 

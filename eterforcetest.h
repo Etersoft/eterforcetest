@@ -108,21 +108,3 @@ static inline void print_measure()
 	if (time_start) \
 		print_measure(); }
 
-
-
-void test_compare();
-void test_string();
-void test_char();
-void test_file();
-void test_window();
-void test_menu();
-void test_message();
-void test_dialog();
-void test_x11dc();
-void test_memdc();
-void test_font();
-void test_time();
-void test_memory();
-void test_encoding();
-void test_ole32();
-
