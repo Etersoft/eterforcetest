@@ -29,12 +29,28 @@ void test_memdc()
     RECT rc, dst;
     POINT pt;
     HBRUSH hbr = CreateSolidBrush(COLOR_TEST);
+    HBITMAP hbmp;
+    HICON hi = LoadIcon(NULL, IDI_EXCLAMATION);
     DWORD ok;
 
-    printf("\n\n* * *  DC memory operations  * * *\n");
+    printf("\n\n* * *  memory DC operations  * * *\n");
 
     hdc = CreateCompatibleDC(NULL);
-    CreateCompatibleBitmap( hdc, 100, 100 );
+    hbmp = CreateCompatibleBitmap( hdc, 200, 200 );
+    if (!hdc || !hbmp) return;
+    SelectObject( hdc, hbmp );
+    DrawIconEx( hdc, 0, 0, hi, 32, 32, 0, 0, DI_NORMAL );
+
+    ok = StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY);
+    MSTART(ok, "StretchBlt", 5000) {
+        StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY);
+    } MEND
+
+    ok = BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY);
+    MSTART(ok, "BitBlt", 100) {
+        BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY);
+    } MEND
+
     SetRect( &rc, 10, 10, 50, 50 );
 
     ok = FillRect( hdc, &rc, hbr );
