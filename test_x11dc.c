@@ -51,20 +51,33 @@ void test_x11dc()
     RECT rc, dst;
     POINT pt;
     HBRUSH hbr = CreateSolidBrush(COLOR_TEST);
+    HICON hi = LoadIcon(NULL, IDI_EXCLAMATION);
     DWORD ok;
 
-    printf("\n\n* * *  DC X11 operations  * * *\n");
+    printf("\n\n* * *  X11 DC operations  * * *\n");
 
     if (!x11dc_RegisterWindowClasses()) return;
 
     hwnd = CreateWindowEx( 0, "WinX11dc", "Test window",
                             WS_OVERLAPPED | WS_CAPTION,
-                            100, 100, 100, 100,
+                            100, 100, 200, 200,
                             0, 0, GetModuleHandle(0), NULL );
 
     ShowWindow( hwnd, SW_SHOW );
 
     hdc = BeginPaint( hwnd, &ps );
+    DrawIconEx( hdc, 0, 0, hi, 32, 32, 0, 0, DI_NORMAL );
+
+    ok = StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY);
+    MSTART(ok, "StretchBlt", 5000) {
+        StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY);
+    } MEND
+
+    ok = BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY);
+    MSTART(ok, "BitBlt", 100) {
+        BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY);
+    } MEND
+
     SetRect( &rc, 10, 10, 50, 50 );
 
     ok = FillRect( hdc, &rc, hbr );
