@@ -65,7 +65,7 @@ WINAPI ticks empty_func()
 void test_time()
 {
 	SYSTEMTIME st, lt;
-/*	FILETIME ft1 */
+	FILETIME ft1, ft2;
 	static DWORD tc;
 	static ULONGLONG utc;
 	WINBASEAPI ULONGLONG (WINAPI *pgtc)(void);
@@ -120,13 +120,16 @@ void test_time()
 		utc = empty_func(); utc = empty_func();
 	} MEND
 
+	/* CompareFileTime on Windows Segfault with NULL args */
+	memset (&ft1, 0, sizeof (ft1));
+	memset (&ft2, 0, sizeof (ft2));
 	MSTART(1, "kernel32_10call", 1) {
 		/* ten times */
-		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
-		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
-		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
-		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
-		res = CompareFileTime(NULL, NULL); res = CompareFileTime(NULL, NULL);
+		res = CompareFileTime(&ft1, &ft2); res = CompareFileTime(&ft1, &ft2);
+		res = CompareFileTime(&ft1, &ft2); res = CompareFileTime(&ft1, &ft2);
+		res = CompareFileTime(&ft1, &ft2); res = CompareFileTime(&ft1, &ft2);
+		res = CompareFileTime(&ft1, &ft2); res = CompareFileTime(&ft1, &ft2);
+		res = CompareFileTime(&ft1, &ft2); res = CompareFileTime(&ft1, &ft2);
 	} MEND
 
 #if 0
