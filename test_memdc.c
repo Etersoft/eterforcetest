@@ -29,26 +29,73 @@ void test_memdc()
     RECT rc, dst;
     POINT pt;
     HBRUSH hbr = CreateSolidBrush(COLOR_TEST);
+    LOGBRUSH lgbr;
     HBITMAP hbmp;
     HICON hi = LoadIcon(NULL, IDI_EXCLAMATION);
+    LOGPALETTE lgp;
+    HPALETTE hpl;
     DWORD ok;
 
     printf("\n\n* * *  memory DC operations  * * *\n");
 
+    ok = (DWORD)CreateCompatibleDC(NULL);
+    MSTART(ok, "CreateCompatibleDC/DeleteDC", 1000) {
+        hdc = CreateCompatibleDC(NULL);
+        DeleteDC(hdc);
+    } MEND
+    DeleteDC((HDC)ok);
+
     hdc = CreateCompatibleDC(NULL);
+
+    ok = (DWORD)CreateCompatibleBitmap( hdc, 200, 200 );
+    MSTART(ok, "CreateCompatibleBitmap/DeleteObject", 100) {
+        hbmp = CreateCompatibleBitmap( hdc, 200, 200 );
+        DeleteObject(hbmp);
+    } MEND
+    DeleteObject((HBITMAP)ok);
+
+    ok = (DWORD)CreateBitmap( 200, 200, 1, 16, NULL );
+    MSTART(ok, "CreateBitmap/DeleteObject", 100) {
+        hbmp = CreateBitmap( 200, 200, 1, 16, NULL );
+        DeleteObject(hbmp);
+    } MEND
+    DeleteObject((HBITMAP)ok);
+
     hbmp = CreateCompatibleBitmap( hdc, 200, 200 );
     if (!hdc || !hbmp) return;
     SelectObject( hdc, hbmp );
     DrawIconEx( hdc, 0, 0, hi, 32, 32, 0, 0, DI_NORMAL );
 
-    ok = StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY);
-    MSTART(ok, "StretchBlt", 5000) {
-        StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY);
+    ok = MoveToEx( hdc, 10, 10, &pt );
+    MSTART(ok, "MoveToEx", 100) {
+        MoveToEx( hdc, 10, 10, &pt );
     } MEND
 
-    ok = BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY);
+    ok = StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY );
+    MSTART(ok, "StretchBlt", 5000) {
+        StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY );
+    } MEND
+
+    SelectObject( hdc, hbr );
+
+    ok = PatBlt( hdc, 100, 100, 16, 16, PATCOPY );
+    MSTART(ok, "PatBlt", 100) {
+        PatBlt( hdc, 100, 100, 16, 16, PATCOPY );
+    } MEND
+
+    ok = GetObjectA( hbr, sizeof(lgbr), &lgbr );
+    MSTART(ok, "GetObjectA", 100) {
+        GetObjectA( hbr, sizeof(lgbr), &lgbr );
+    } MEND
+
+    ok = GetObjectW( hbr, sizeof(lgbr), &lgbr );
+    MSTART(ok, "GetObjectW", 100) {
+        GetObjectW( hbr, sizeof(lgbr), &lgbr );
+    } MEND
+
+    ok = BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY );
     MSTART(ok, "BitBlt", 100) {
-        BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY);
+        BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY );
     } MEND
 
     SetRect( &rc, 10, 10, 50, 50 );
@@ -106,6 +153,24 @@ void test_memdc()
     ok = SetBkColor( hdc, COLOR_TEST );
     MSTART((ok != CLR_INVALID), "SetBkColor", 10) {
         SetBkColor( hdc, COLOR_TEST );
+    } MEND
+
+    lgp.palVersion = 1;
+    lgp.palNumEntries = 1;
+
+    ok = (DWORD)CreatePalette(&lgp);
+    MSTART(ok, "CreatePalette/DeleteObject", 10) {
+        hpl = CreatePalette(&lgp);
+        DeleteObject(hpl);
+    } MEND
+    DeleteObject((HPALETTE)ok);
+
+    hpl = CreatePalette(&lgp);
+
+    ok = (DWORD)SelectPalette( hdc, hpl, FALSE );
+    MSTART(ok, "SelectPalette/RealizePalette", 10) {
+        SelectPalette( hdc, hpl, FALSE );
+        RealizePalette(hdc);
     } MEND
 
     DeleteDC(hdc);
