@@ -25,13 +25,12 @@
 
 void test_memdc()
 {
-    HDC hdc;
+    HDC hdc, hdcsrc;
     RECT rc, dst;
     POINT pt;
     HBRUSH hbr = CreateSolidBrush(COLOR_TEST);
     LOGBRUSH lgbr;
     HBITMAP hbmp;
-    HICON hi = LoadIcon(NULL, IDI_EXCLAMATION);
     LOGPALETTE lgp;
     HPALETTE hpl;
     char bmibuf[sizeof(BITMAPINFO) + 256 * sizeof(RGBQUAD)];
@@ -49,6 +48,7 @@ void test_memdc()
     DeleteDC((HDC)ok);
 
     hdc = CreateCompatibleDC(NULL);
+    hdcsrc = CreateCompatibleDC(NULL);
 
     ok = (DWORD)CreateCompatibleBitmap( hdc, 200, 200 );
     MSTART(ok, "CreateCompatibleBitmap/DeleteObject", 100) {
@@ -64,6 +64,8 @@ void test_memdc()
     } MEND
     DeleteObject((HBITMAP)ok);
 
+    if (!hdc || !hbmp || !hdcsrc) return;
+
     bmi = ( BITMAPINFO* ) bmibuf;
     memset( bmi, 0, sizeof(bmibuf) );
 
@@ -76,18 +78,18 @@ void test_memdc()
     bmi->bmiHeader.biSizeImage = bmi->bmiHeader.biHeight * bmi->bmiHeader.biWidth * 4;
 
     hbmp = CreateDIBSection( hdc, bmi, DIB_RGB_COLORS, (void**)&bits, 0, 0 );
-    if (!hdc || !hbmp) return;
     SelectObject( hdc, hbmp );
-    DrawIconEx( hdc, 0, 0, hi, 32, 32, 0, 0, DI_NORMAL );
+    hbmp = CreateDIBSection( hdcsrc, bmi, DIB_RGB_COLORS, (void**)&bits, 0, 0 );
+    SelectObject( hdcsrc, hbmp );
 
     ok = MoveToEx( hdc, 10, 10, &pt );
     MSTART(ok, "MoveToEx", 100) {
         MoveToEx( hdc, 10, 10, &pt );
     } MEND
 
-    ok = StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY );
+    ok = StretchBlt( hdc, 100, 100, 16, 16, hdcsrc, 0, 0, 32, 32, SRCCOPY );
     MSTART(ok, "StretchBlt", 5000) {
-        StretchBlt( hdc, 100, 100, 16, 16, hdc, 0, 0, 32, 32, SRCCOPY );
+        StretchBlt( hdc, 100, 100, 16, 16, hdcsrc, 0, 0, 32, 32, SRCCOPY );
     } MEND
 
     SelectObject( hdc, hbr );
@@ -107,9 +109,9 @@ void test_memdc()
         GetObjectW( hbr, sizeof(lgbr), &lgbr );
     } MEND
 
-    ok = BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY );
+    ok = BitBlt( hdc, 100, 100, 32, 32, hdcsrc, 0, 0, SRCCOPY );
     MSTART(ok, "BitBlt", 100) {
-        BitBlt( hdc, 100, 100, 32, 32, hdc, 0, 0, SRCCOPY );
+        BitBlt( hdc, 100, 100, 32, 32, hdcsrc, 0, 0, SRCCOPY );
     } MEND
 
     SetRect( &rc, 10, 10, 50, 50 );
