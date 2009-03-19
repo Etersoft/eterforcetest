@@ -34,6 +34,9 @@ void test_memdc()
     HICON hi = LoadIcon(NULL, IDI_EXCLAMATION);
     LOGPALETTE lgp;
     HPALETTE hpl;
+    char bmibuf[sizeof(BITMAPINFO) + 256 * sizeof(RGBQUAD)];
+    BITMAPINFO *bmi;
+    BYTE *bits;
     DWORD ok;
 
     printf("\n\n* * *  memory DC operations  * * *\n");
@@ -61,7 +64,18 @@ void test_memdc()
     } MEND
     DeleteObject((HBITMAP)ok);
 
-    hbmp = CreateCompatibleBitmap( hdc, 200, 200 );
+    bmi = ( BITMAPINFO* ) bmibuf;
+    memset( bmi, 0, sizeof(bmibuf) );
+
+    bmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmi->bmiHeader.biHeight = 200;
+    bmi->bmiHeader.biWidth = 200;
+    bmi->bmiHeader.biPlanes = 1;
+    bmi->bmiHeader.biBitCount = 24;
+    bmi->bmiHeader.biCompression = BI_RGB;
+    bmi->bmiHeader.biSizeImage = bmi->bmiHeader.biHeight * bmi->bmiHeader.biWidth * 4;
+
+    hbmp = CreateDIBSection( hdc, bmi, DIB_RGB_COLORS, (void**)&bits, 0, 0 );
     if (!hdc || !hbmp) return;
     SelectObject( hdc, hbmp );
     DrawIconEx( hdc, 0, 0, hi, 32, 32, 0, 0, DI_NORMAL );
