@@ -32,6 +32,19 @@ WINBASEAPI ULONGLONG   WINAPI GetTickCount64(void);
 
 */
 
+DWORD test_gettid(void)
+{
+//#if defined(__linux__) && defined(__i386__)
+#if defined(__i386__)
+    DWORD ret;
+    __asm__("int $0x80" : "=a" (ret) : "0" (224) /* SYS_gettid */);
+    return ret;
+#else
+#warning "Not Linux?"
+    return -1;  /* FIXME */
+#endif
+}
+
 
 typedef unsigned long long ticks;
 
@@ -149,6 +162,13 @@ void test_time()
 	MSTART(1, "OS_Kernel_call", 40) {
 		GetSystemTime(&lt);
 	} MEND
+
+/* How to detect Linux under Wine: Wait for http://bugs.etersoft.ru/show_bug.cgi?id=3790 */
+#if 0
+	MSTART(1, "OS_Kernel_call_gettid", 40) {
+		res = test_gettid();
+	} MEND
+#endif
 
 	/* Guess close key is one wineserver call */
 	res = (ERROR_SUCCESS==RegOpenKeyEx(HKEY_LOCAL_MACHINE,"Software",0,KEY_WRITE,&key));
