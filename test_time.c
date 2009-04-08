@@ -74,6 +74,7 @@ void test_time()
 	HANDLE hModule;
 	BOOL res;
 	HKEY key;
+	CRITICAL_SECTION cs;
 
 	printf("\n\n* * *  Time operations  * * *\n");
 
@@ -156,4 +157,10 @@ void test_time()
 		RegCloseKey(key);
 	} MEND
 
+	InitializeCriticalSection( &cs );
+	MSTART(1, "Critical section", 1) {
+		EnterCriticalSection( &cs );
+		LeaveCriticalSection( &cs );
+	} MEND
+	DeleteCriticalSection( &cs );
 }
