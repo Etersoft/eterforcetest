@@ -38,6 +38,9 @@ static int measure_divid;
 extern FILE *measure_f;
 void measure_init();
 
+/* Get host OS name */
+extern const char *get_sysname();
+
 extern struct { char *name; int ms; int res;} et_measure[];
 
 static inline void measure_start() {

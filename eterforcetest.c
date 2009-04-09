@@ -34,6 +34,31 @@ void measure_init()
 
 }
 
+/* Check for host OS */
+void (CDECL *p_wine_get_host_version)(const char **, const char **);
+
+
+const char *get_sysname()
+{
+    const char *sysname, *release;
+    HMODULE ntdll;
+
+    ntdll = LoadLibrary("ntdll.dll");
+    if (ntdll == NULL)
+        return NULL;
+
+    p_wine_get_host_version = (void *)GetProcAddress(ntdll, "wine_get_host_version");
+    if (p_wine_get_host_version == NULL) {
+        FreeLibrary(ntdll);
+        return "Windows";
+    }
+
+    p_wine_get_host_version(&sysname, &release);
+    FreeLibrary(ntdll);
+    return sysname;
+}
+
+
 void measure_report()
 {
 	int i, count = 0;
@@ -63,8 +88,9 @@ int main(int argc, char**argv)
 	static int i = 2;
 	int list = 0;
 
-	printf("\nPerformance measurement instrument. (c) Etersoft 2008\n");
+	printf("\nPerformance measurement instrument. (c) Etersoft 2008, 2009\n");
 	printf("See description at http://winehq.org.ru/Measurement\n");
+	printf("Running under host OS: %s", get_sysname());
 	printf("\n\n");
 
 	if (argc > 1) {
