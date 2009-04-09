@@ -2,6 +2,7 @@
  * ETERFORCETEST
  *
  * Copyright 2008 Vitaly Lipatov, Etersoft
+ * Copyright 2009 Alexander Morozov, Etersoft
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,13 +35,11 @@ WINBASEAPI ULONGLONG   WINAPI GetTickCount64(void);
 
 DWORD test_gettid(void)
 {
-//#if defined(__linux__) && defined(__i386__)
 #if defined(__i386__)
     DWORD ret;
     __asm__("int $0x80" : "=a" (ret) : "0" (224) /* SYS_gettid */);
     return ret;
 #else
-#warning "Not Linux?"
     return -1;  /* FIXME */
 #endif
 }
@@ -164,11 +163,12 @@ void test_time()
 	} MEND
 
 /* How to detect Linux under Wine: Wait for http://bugs.etersoft.ru/show_bug.cgi?id=3790 */
-#if 0
+if (!strcmp(get_sysname(), "Linux")) {
 	MSTART(1, "OS_Kernel_call_gettid", 40) {
 		res = test_gettid();
 	} MEND
-#endif
+} else
+	printf("Skipping OS_Kernel_call_gettid on %s host OS\n", get_sysname());
 
 	/* Guess close key is one wineserver call */
 	res = (ERROR_SUCCESS==RegOpenKeyEx(HKEY_LOCAL_MACHINE,"Software",0,KEY_WRITE,&key));
