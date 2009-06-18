@@ -25,6 +25,7 @@ void test_memory()
 {
 	static void *buffer, *buffer1, *buffer2;
 	int size = 4096 * 25;
+	DWORD old_prot;
 
 	printf("\n\n* * *  Memory operations  * * *\n");
 
@@ -72,4 +73,10 @@ void test_memory()
 		free(buffer1);
 		free(buffer2);
 	} MEND
+
+	buffer = malloc(size);
+	MSTART(buffer, "VirtualProtect", 100) {
+		VirtualProtect(buffer, size, PAGE_READWRITE, &old_prot);
+	} MEND
+	free(buffer);
 }
