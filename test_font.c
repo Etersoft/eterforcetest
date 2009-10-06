@@ -18,9 +18,58 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#define _WIN32_WINNT 0X500
+
 #include <windows.h>
 #include "eterforcetest.h"
 
 void test_font()
 {
+    HDC hdc;
+    DWORD dwGlyphSize;
+    GLYPHSET *pSet;
+    HFONT hf, phf;
+    LOGFONT lf = { -12, 0, 0, 0, 0, 0, 0, 0, ANSI_CHARSET,
+                    0, 0, 0, 0, "Arial" };
+    DWORD ok;
+
+    printf("\n\n* * *  Font operations  * * *\n");
+
+
+    hdc = CreateCompatibleDC(NULL);
+
+    hf = CreateFontIndirect(&lf);
+    phf = SelectObject(hdc, hf);
+    dwGlyphSize = GetFontUnicodeRanges( hdc, NULL );
+    pSet = HeapAlloc(GetProcessHeap(), 0, dwGlyphSize);
+    if (!pSet) return;
+    pSet->cbThis = dwGlyphSize;
+
+    ok = (DWORD)GetFontUnicodeRanges( hdc, pSet);
+    MSTART(ok, "GetFontUnicodeRanges (ANSI_CHARSET)", 500) {
+        GetFontUnicodeRanges( hdc, pSet);
+    } MEND
+
+    HeapFree(GetProcessHeap(), 0, pSet);
+    SelectObject(hdc, phf);
+    DeleteObject(hf);
+
+    lf.lfCharSet = SYMBOL_CHARSET;
+    hf = CreateFontIndirect(&lf);
+    phf = SelectObject(hdc, hf);
+    dwGlyphSize = GetFontUnicodeRanges( hdc, NULL );
+    pSet = HeapAlloc(GetProcessHeap(), 0, dwGlyphSize);
+    if (!pSet) return;
+    pSet->cbThis = dwGlyphSize;
+
+    ok = (DWORD)GetFontUnicodeRanges( hdc, pSet);
+    MSTART(ok, "GetFontUnicodeRanges (SYMBOL_CHARSET)", 500) {
+        GetFontUnicodeRanges( hdc, pSet);
+    } MEND
+
+    HeapFree(GetProcessHeap(), 0, pSet);
+    SelectObject(hdc, phf);
+    DeleteObject(hf);
+
+    DeleteDC(hdc);
 }
