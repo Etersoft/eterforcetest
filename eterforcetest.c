@@ -110,6 +110,7 @@ int main(int argc, char**argv)
     TEST(x11dc);
     TEST(memdc);
 	TEST(font);
+    TEST(ole32);
 
 	if (!list)
 		measure_report();

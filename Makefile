@@ -1,14 +1,17 @@
 PUBDIR=/var/ftp/pub/Etersoft/Eterforcetest
-CPP=i386-mingw32msvc-g++
-GCC=i386-mingw32msvc-gcc
+MINGW=i586-pc-mingw32
+MINGWLIBDIR=/usr/$(MINGW)/sys-root/mingw/lib
+
+CPP=$(MINGW)-g++
+GCC=$(MINGW)-gcc
 
 CFLAGS=-Wall -O0 -g -Werror
 LDFLAGS=
-LIBADD=-lgdi32
+LIBADD=-lgdi32 -lole32 $(MINGWLIBDIR)/libuuid.a
 
 PROGRAM=eterforcetest
 
-OBJECTS=eterforcetest.o etalon_measure.o test_string.o test_file.o test_time.o test_memory.o test_char.o test_encoding.o test_compare.o test_window.o test_font.o test_menu.o test_message.o test_dialog.o test_x11dc.o test_memdc.o
+OBJECTS=eterforcetest.o etalon_measure.o test_string.o test_file.o test_time.o test_memory.o test_char.o test_encoding.o test_compare.o test_window.o test_font.o test_menu.o test_message.o test_dialog.o test_x11dc.o test_memdc.o test_ole32.o
 
 .cpp.o:
 	$(CPP) -c -o $@ $(CFLAGS) $<

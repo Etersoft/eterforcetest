@@ -124,4 +124,5 @@ void test_font();
 void test_time();
 void test_memory();
 void test_encoding();
+void test_ole32();
 
