@@ -46,7 +46,7 @@ static const WCHAR test2_stringW[] = {'a','b','c','d','e','f','g','h','r','t','p
 void test_char()
 {
 	/* we need static var for save result */
-	static CHAR *str;
+	static const CHAR *str;
 	static WCHAR *strW;
 	int ok = strchr(TEST_STRING, 'Z') != NULL;
 	static BOOL flag;
