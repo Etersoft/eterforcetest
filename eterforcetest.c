@@ -139,6 +139,7 @@ int main(int argc, char**argv)
 	TEST(font);
 	TEST(ole32);
 	TEST(reg);
+	TEST(stat);
 
 	if (!list)
 		measure_report();
